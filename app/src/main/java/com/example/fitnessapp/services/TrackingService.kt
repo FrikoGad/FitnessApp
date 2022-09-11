@@ -19,15 +19,23 @@ import com.example.fitnessapp.util.Const.ACTION_START_OR_RESUME_SERVICE
 import com.example.fitnessapp.util.Const.ACTION_STOP_SERVICE
 import com.example.fitnessapp.util.Const.NOTIFICATION_CHANNEL_ID
 import com.example.fitnessapp.util.Const.NOTIFICATION_CHANNEL_NAME
+import com.example.fitnessapp.util.Const.NOTIFICATION_ID
 import timber.log.Timber
 
 class TrackingService : LifecycleService() {
+
+    var isFirstRun = true
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         intent?.let {
             when(it.action) {
                 ACTION_START_OR_RESUME_SERVICE -> {
-                    Timber.d("Started or resumed service")
+                    if (isFirstRun) {
+                        startForegroundService()
+                        isFirstRun = false
+                    } else {
+                        Timber.d("Resuming service...")
+                    }
                 }
                 ACTION_PAUSE_SERVICE -> {
                     Timber.d("Paused service")
@@ -54,6 +62,9 @@ class TrackingService : LifecycleService() {
             .setSmallIcon(R.drawable.ic_directions_run_black_24dp)
             .setContentTitle("Running App")
             .setContentText("00:00:00")
+            .setContentIntent(getMainActivityPendingIntent())
+
+        startForeground(NOTIFICATION_ID, notificationBuilder.build())
     }
 
     private fun getMainActivityPendingIntent() = PendingIntent.getActivity(
