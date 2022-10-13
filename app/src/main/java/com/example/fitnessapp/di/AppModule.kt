@@ -1,9 +1,11 @@
 package com.example.fitnessapp.di
 
 import android.content.Context
+import android.content.Context.MODE_PRIVATE
 import androidx.room.Room
 import com.example.fitnessapp.db.RunningDatabase
 import com.example.fitnessapp.util.Const.RUNNING_DATABASE_NAME
+import com.example.fitnessapp.util.Const.SHARED_PREFERENCES_NAME
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -28,5 +30,10 @@ object AppModule {
     @Singleton
     @Provides
     fun provideRunDao(db: RunningDatabase) = db.getRunDao()
+
+    @Singleton
+    @Provides
+    fun provideSharedPreferences(@ApplicationContext app: Context) =
+        app.getSharedPreferences(SHARED_PREFERENCES_NAME, MODE_PRIVATE)
 
 }

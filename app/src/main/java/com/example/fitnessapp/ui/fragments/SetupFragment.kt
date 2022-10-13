@@ -17,4 +17,6 @@ class SetupFragment : Fragment(R.layout.fragment_setup) {
         }
     }
 
+    private fun writePersonalDataToSharedPref()
+
 }
